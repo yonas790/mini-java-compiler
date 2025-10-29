@@ -28,6 +28,22 @@ public class StackVM {
                     ensureStack(1); System.out.println(stack.pop()); ip++; break;
                 case "HALT":
                     running = false; break;
+                case "JMP":
+                    if (ins.operand == null) throw new RuntimeException("JMP requires operand");
+                    ip = ins.operand;
+                    break;
+                case "JZ":
+                    if (ins.operand == null) throw new RuntimeException("JZ requires operand");
+                    ensureStack(1);
+                    int v = stack.pop();
+                    ip = (v == 0) ? ins.operand : ip + 1;
+                    break;
+                case "JNZ":
+                    if (ins.operand == null) throw new RuntimeException("JNZ requires operand");
+                    ensureStack(1);
+                    int v2 = stack.pop();
+                    ip = (v2 != 0) ? ins.operand : ip + 1;
+                    break;
                 default:
                     throw new RuntimeException("Unknown opcode: " + ins.op + " at ip=" + ip);
             }

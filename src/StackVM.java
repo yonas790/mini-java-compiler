@@ -44,6 +44,15 @@ public class StackVM {
                     int v2 = stack.pop();
                     ip = (v2 != 0) ? ins.operand : ip + 1;
                     break;
+                case "CALL":
+                    if (ins.operand == null) throw new RuntimeException("CALL requires target");
+                    callStack.push(ip + 1);
+                    ip = ins.operand;
+                    break;
+                case "RET":
+                    if (callStack.isEmpty()) running = false;
+                    else ip = callStack.pop();
+                    break;
                 default:
                     throw new RuntimeException("Unknown opcode: " + ins.op + " at ip=" + ip);
             }

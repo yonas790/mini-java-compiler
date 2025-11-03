@@ -39,9 +39,13 @@ public class Lexer {
                     case '*': tokens.add(new Token(TokenType.MUL, "*")); advance(); break;
                     case '/': tokens.add(new Token(TokenType.DIV, "/")); advance(); break;
                     case '%': tokens.add(new Token(TokenType.MOD, "%")); advance(); break;
+                    case '"': // NEW: handle string literal
+                        tokens.add(stringLiteral());
+                        break;
                     default:
                         throw new RuntimeException("Unexpected character: " + current);
                 }
+
             }
         }
 
@@ -69,6 +73,20 @@ public class Lexer {
             default -> new Token(TokenType.IDENTIFIER, val);
         };
     }
+
+    private Token stringLiteral() {
+    StringBuilder sb = new StringBuilder();
+    advance(); // skip opening "
+    while (pos < length && peek() != '"') {
+        sb.append(advance());
+    }
+    if (pos >= length) {
+        throw new RuntimeException("Unterminated string literal");
+    }
+    advance(); // skip closing "
+    return new Token(TokenType.STRING, sb.toString());
+}
+
 
     private char peek() { return input.charAt(pos); }
     private char advance() { return input.charAt(pos++); }

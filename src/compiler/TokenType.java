@@ -23,6 +23,7 @@ public enum TokenType {
     
     // Literals and identifiers
     NUMBER,
+    STRING,
     IDENTIFIER,
     
     // End of file
